@@ -35,3 +35,16 @@ print("========")
 A = np.array([[1, 2], [3, 4]])
 B = np.array([[10, 20]])
 print(A * B)
+print("========")
+
+# 访问矩阵元素
+X = np.array([[51, 55], [14, 19], [0, 4]])
+print(X[0])
+print(X[0][1])
+# 把矩阵转化为一位数据
+X = X.flatten()
+print(X)
+# 生成数据检索数组
+print(X[np.array([0, 2, 4])])
+# 获取指定条件的数据
+print(X[X > 15])
