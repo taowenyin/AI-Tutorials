@@ -2,6 +2,7 @@ import gzip
 import numpy as np
 import pickle
 import os
+import matplotlib.pyplot as plt
 
 # 数据集下载于http://yann.lecun.com/exdb/mnist/
 
@@ -61,8 +62,17 @@ def _init_mnist():
         pickle.dump(dataset, f, -1)
 
 
+# 读取显示图片
+def img_show(img):
+    # 图片显示
+    plt.imshow(img)
+    plt.show()
+
+
 # 载入数据集
-def load_mnist():
+# normalize : 将图像的像素值正规化为0.0~1.0
+# flatten : 是否将图像展开为一维数组
+def load_mnist(normalize=False, flatten=True, one_hot_label=False):
     # 如果数据集文件不存在，那么就创建数据集文件
     if not os.path.exists(save_file):
         _init_mnist()
@@ -70,5 +80,15 @@ def load_mnist():
     # 载入序列化的数据集
     with open(save_file, 'rb') as f:
         dataset = pickle.load(f)
+
+    if normalize:
+        for key in ('train_img', 'test_img'):
+            # 把每个R、G、B转化为浮点数，并且归一化
+            dataset[key] = dataset[key].astype(np.float32)
+            dataset[key] /= 255.0
+
+    if not flatten:
+        for key in ('train_img', 'test_img'):
+            dataset[key] = dataset[key].reshape(-1, 1, 28, 28)
 
     return dataset['train_img'], dataset['train_label'], dataset['test_img'], dataset['test_label']

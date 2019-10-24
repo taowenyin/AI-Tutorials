@@ -9,3 +9,8 @@ if __name__ == '__main__':
     print(train_label.shape)
     print(test_img.shape)
     print(test_label.shape)
+
+    # 读取并显示图片
+    img = train_img[0]
+    img = img.reshape(28, 28)
+    mnist.img_show(img)
