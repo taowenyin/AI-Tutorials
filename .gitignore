@@ -126,3 +126,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# 生成的序列化数据文件
+*.pkl
