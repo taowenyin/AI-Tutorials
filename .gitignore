@@ -127,4 +127,4 @@ dmypy.json
 .pyre/
 
 # 生成的序列化数据文件
-*.pkl
+mnist.pkl

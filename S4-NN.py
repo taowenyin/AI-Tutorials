@@ -9,12 +9,12 @@ def step_function(x):
     return y.astype(np.int)
 
 # Sigmoid激活函数
-# def sigmoid_function(x):
-#     return 1 / (1 + np.exp(-x))
-
-
-# Sigmoid激活函数
 def sigmoid_function(x):
+    return 1 / (1 + np.exp(-x))
+
+
+# Softmax激活函数
+def softmax_function(x):
     # 获取输入数据中最大值最为常量参数，避免结果超过最大值
     c = np.max(x)
     # 获取每个输入的指数函数结果
