@@ -8,6 +8,7 @@ def step_function(x):
     # 把boolean的数据类型转化为整型
     return y.astype(np.int)
 
+
 # Sigmoid激活函数
 def sigmoid_function(x):
     return 1 / (1 + np.exp(-x))

@@ -62,6 +62,16 @@ def _init_mnist():
         pickle.dump(dataset, f, -1)
 
 
+# 把标签变为0、1数据集
+# 首先创建一个有10个元素的数组，并且初始化为0，
+# 然后根据标签索引把0数组中的对应位置置1
+def _change_one_hot_label(X):
+    T = np.zeros((X.size, 10))
+    for idx, row in enumerate(T):
+        row[X[idx]] = 1
+    return T
+
+
 # 读取显示图片
 def img_show(img):
     # 图片显示
@@ -90,5 +100,9 @@ def load_mnist(normalize=False, flatten=True, one_hot_label=False):
     if not flatten:
         for key in ('train_img', 'test_img'):
             dataset[key] = dataset[key].reshape(-1, 1, 28, 28)
+
+    if one_hot_label:
+        dataset['train_label'] = _change_one_hot_label(dataset['train_label'])
+        dataset['test_label'] = _change_one_hot_label(dataset['test_label'])
 
     return dataset['train_img'], dataset['train_label'], dataset['test_img'], dataset['test_label']
