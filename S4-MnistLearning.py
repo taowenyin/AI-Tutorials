@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pylab as plt
 import libs.mnist as mnist
 from libs.functions import sigmoid_function
 from libs.functions import softmax_function
@@ -87,3 +88,10 @@ if __name__ == '__main__':
         loss = network.loss(img_batch, label_batch)
         # 记录损失值
         train_lost_list.append(loss)
+
+    x = np.arange(0, 11000, 1)
+    y = train_lost_list
+    plt.plot(x, y)
+    # 设置Y轴的显示范围
+    plt.ylim(0, 10)
+    plt.show()
