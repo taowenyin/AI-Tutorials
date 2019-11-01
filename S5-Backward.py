@@ -1,0 +1,115 @@
+import numpy as np
+from libs.functions import softmax_function
+from libs.functions import cross_entropy_error
+
+# 乘法层
+class MulLayer:
+    def __init__(self):
+        self.x = None
+        self.y = None
+
+    def forward(self, x, y):
+        self.x = x
+        self.y = y
+        out = x * y
+
+        return out
+
+    def backward(self, dout):
+        # 反向传播时进行翻转
+        dx = dout * self.y
+        dy = dout * self.x
+
+        return dx, dy
+
+
+# 加法层
+class AddLayer:
+    def __init__(self):
+        pass
+
+    def forward(self, x, y):
+        out = x + y
+        return out
+
+    def backward(self, dout):
+        # 反向传播是保持不变
+        dx = dout * 1
+        dy = dout * 1
+        return dx, dy
+
+
+class Relu:
+    def __init__(self):
+        self.mask = None
+
+    def forward(self, x):
+        # 把小于0的都变为True，其他为False
+        self.mask = (x <= 0)
+        # 深度拷贝一份
+        out = x.copy()
+        # 把小于0的都置0
+        out[self.mask] = 0
+        return out
+
+    # 反向传播，小于0的等于0，否则就原样返回
+    def backward(self, dout):
+        dout[self.mask] = 0
+        dx = dout
+        return dx
+
+
+class Sigmoid:
+    def __init__(self):
+        self.out = None
+
+    def forward(self, x):
+        out = 1 / (1 + np.exp(-x))
+        self.out = out
+
+    # 优化后的反向传播
+    def backward(self, dout):
+        dx = dout * (1.0 - self.out) * self.out
+        return dx
+
+
+class Affine:
+    def __init__(self, W, b):
+        self.W = W
+        self.b = b
+        self.x = None
+        self.dW = None
+        self.db = None
+
+    def forward(self, x):
+        self.x = x
+        out = np.dot(x, self.W) + self.b
+        return out
+
+    def backward(self, dout):
+        dx = np.dot(dout, self.W.T)
+        self.dW = np.dot(self.x.T, dout)
+        # B的梯度为输出第一行的和
+        self.db = np.sum(dout, axis=0)
+        return dx
+
+
+class SoftmaxWithLoss:
+    def __init__(self):
+        # 损失
+        self.loss = None
+        # softmax的输出
+        self.y = None
+        # 监督数据（one-hot向量）
+        self.t = None
+
+    def forward(self, x, t):
+        self.t = t
+        self.y = softmax_function(x)
+        self.loss = cross_entropy_error(self.y, self.t)
+        return self.loss
+
+    def backward(self, dout=1):
+        batch_size = self.t.shape[0]
+        dx = (self.y - self.t) / batch_size
+        return dx
